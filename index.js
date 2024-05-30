@@ -1,12 +1,10 @@
 const express = require("express");
 const OpenAI = require("openai");
-const serverless = require("serverless-http");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 const bp = require("body-parser");
 const app = express();
-const router = express.Router();
 
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
@@ -115,6 +113,3 @@ app.post("/converse", (req, res) => {
 app.listen(PORT, () => {
 	console.log("Conversational AI assistant listening on port 3000!");
 });
-
-app.use("/.netlify/functions/app", router);
-module.exports.handler = serverless(app);
