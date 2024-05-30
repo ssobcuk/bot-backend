@@ -10,7 +10,7 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
 const openai = new OpenAI({
-	apiKey: process.env["OPENAI_API_KEY"],
+	apiKey: "sk-proj-w7DWBHbkF5tXfElSZlRJT3BlbkFJmIBmahUlsFqPjFcSMD5w",
 });
 
 const conversationContextPromptNewArch = [
