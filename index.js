@@ -10,7 +10,7 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
 const openai = new OpenAI({
-	apiKey: "sk-proj-w7DWBHbkF5tXfElSZlRJT3BlbkFJmIBmahUlsFqPjFcSMD5w",
+	apiKey: "sk-proj-SKfNbRKsmrXLGyVABLaVT3BlbkFJy0lqAvNzaUrxDVPJemT6",
 });
 
 const conversationContextPromptNewArch = [
