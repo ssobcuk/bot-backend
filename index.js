@@ -1,16 +1,17 @@
 const express = require("express");
 const OpenAI = require("openai");
+const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
 
-require("dotenv").config();
+dotenv.config();
 const PORT = process.env.PORT || 3000;
-const bp = require("body-parser");
-const app = express();
 
-app.use(bp.json());
-app.use(bp.urlencoded({ extended: true }));
+const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const openai = new OpenAI({
-	apiKey: "sk-proj-SKfNbRKsmrXLGyVABLaVT3BlbkFJy0lqAvNzaUrxDVPJemT6",
+	apiKey: process.env.OPENAI_API_KEY,
 });
 
 const conversationContextPromptNewArch = [
@@ -50,9 +51,8 @@ const availableBots = [
 	},
 ];
 
-async function chatRequestNewArch(req, res, model) {
+const chatRequestNewArch = async (req, res, model) => {
 	const message = req.body.message;
-
 	const messages = [
 		...conversationContextPromptNewArch,
 		{ role: "user", content: message },
@@ -73,9 +73,9 @@ async function chatRequestNewArch(req, res, model) {
 		console.error("Error communicating with OpenAI:", error);
 		res.status(500).send("Error communicating with OpenAI");
 	}
-}
+};
 
-async function chatRequestOldArch(req, res, model) {
+const chatRequestOldArch = (req, res, model) => {
 	const message = req.body.message;
 
 	openai.completions
@@ -95,7 +95,7 @@ async function chatRequestOldArch(req, res, model) {
 			console.error("Error communicating with OpenAI:", error);
 			res.status(500).send("Error communicating with OpenAI");
 		});
-}
+};
 
 app.get("/getBots", (req, res) => {
 	res.json(availableBots);
@@ -103,6 +103,10 @@ app.get("/getBots", (req, res) => {
 
 app.post("/converse", (req, res) => {
 	const botId = req.body?.botId;
+	if (!botId) {
+		return res.status(400).send("BotId parameter is required");
+	}
+
 	if (botId === "davinci-002") {
 		chatRequestOldArch(req, res, botId);
 	} else {
@@ -111,5 +115,5 @@ app.post("/converse", (req, res) => {
 });
 
 app.listen(PORT, () => {
-	console.log("Conversational AI assistant listening on port 3000!");
+	console.log(`Conversational AI assistant listening on port ${PORT}!`);
 });
